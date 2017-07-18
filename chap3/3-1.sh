@@ -2,7 +2,7 @@
 
 # 从 /etc/fstab 中读行
 
-File = /etc/fstab
+File=/etc/fstab
 
 {
     read line1
