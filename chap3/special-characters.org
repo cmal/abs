@@ -1,0 +1,76 @@
+#+STARTUP: entitiespretty
+* Special Characters Found In Scripts and Elsewhere
+
+| Special Char      | Name                                       | 作用                                           | Example                                                      |
+|-------------------+--------------------------------------------+------------------------------------------------+--------------------------------------------------------------|
+| #                 | comments                                   |                                                |                                                              |
+| ;                 | command separator                          | 允许一行多个命令                               |                                                              |
+| ;;                | terminator in a case option                | 分隔case选项                                   |                                                              |
+| ;;& ;&            | terminators in a case option               | 同上                                           |                                                              |
+| .                 | dot command                                | 同 source 命令                                 |                                                              |
+| .                 | dot as a component of a filename           |                                                |                                                              |
+| .                 | dot character match                        |                                                |                                                              |
+| "                 | partial quoting                            | preserves most special chars                   |                                                              |
+| '                 | full quoting                               | perserves all special chars                    |                                                              |
+| ,                 | comma operator                             | 连接算术运算，返回最后一个                     |                                                              |
+| " '               | lowercase conversion                       | 参数替换                                       |                                                              |
+| \                 | escape                                     | 单字符转义                                     |                                                              |
+| /                 | filename path separator                    |                                                |                                                              |
+| `                 | command substitution                       | 将命令的输出赋值给变量                         |                                                              |
+| :                 | null command                               | shell equivalent of NOP(no op)                 |                                                              |
+| !                 | reverse the sense of a test or exit status | 表示否？                                       |                                                              |
+| *                 | wild card                                  | 通配符                                         |                                                              |
+| *                 | arithmetic operator                        | 乘号                                           |                                                              |
+| ?                 | test operator                              | cond?true:false                                |                                                              |
+| ?                 | wild card                                  | 通配符                                         |                                                              |
+| $                 | variable substitution                      | 变量                                           |                                                              |
+| $                 | EOF                                        |                                                |                                                              |
+| ${}               | parameter substitution                     | 参数替换                                       |                                                              |
+| $'...'            | quoted string expansion                    | 将8/16进制转换为ASCII/Unicode字符串            |                                                              |
+| $* $@             | positional parameter                       |                                                |                                                              |
+| $?                | exit status variable                       |                                                |                                                              |
+| $$                | process ID variable                        |                                                |                                                              |
+| ()                | command group                              |                                                |                                                              |
+| {xxx,yyy,zzz,...} | brace expansion                            | 表示一列数据                                   |                                                              |
+| {a..z}            | extended brace expansion                   | 表示一列数据                                   | {0..3} 0 1 2 3                                               |
+| {}                | block of code                              | 匿名函数，其中定义的变量在其后的脚本中仍能访问 | Example 3-1, Example 3-2                                     |
+| {}                | placeholder for text                       | used after xargs -i                            |                                                              |
+| {} \;             | pathname                                   | ??                                             |                                                              |
+| []                | test                                       | part of shell builtin test                     |                                                              |
+| [[]]              | test                                       | shell keyword                                  |                                                              |
+| []                | array element                              |                                                |                                                              |
+| []                | range of characters                        | 用在regexp中                                   |                                                              |
+| $[ ... ]          | integer expansion                          | 对其中的 integer expression 求值               |                                                              |
+| (())              | integer expansion                          | 对其中的 integer expression 展开并求值         |                                                              |
+| > &> >& >> < <>   | redirection                                | IO重定向                                       | > f 重定向 output 到f                                        |
+|                   |                                            |                                                | &>f 重定向 stdout/stderr 到f                                 |
+|                   |                                            |                                                | >&2 重定向 stdout 到 stderr                                  |
+|                   |                                            |                                                | >>f 重定向 output 追加到f                                    |
+|                   |                                            |                                                | [i]<>f 以读写方式打开f，将file descriptor赋值给i             |
+| < >               | ASCII comparison                           | 比较字符串，整数                               |                                                              |
+| <<                | redirection used in here document          |                                                |                                                              |
+| <<<               | redirection used in here string            |                                                |                                                              |
+| \< \>             | word boundary                              | regexp                                         |                                                              |
+| \vert{}                 | pipe                                       | make prev's stdout to next's stdin             |                                                              |
+| >\vert{}                | force recirection                          | forcely overwrite an existing file             |                                                              |
+| \vert{}\vert{}                | OR logical operator                        | used in a test contruct                        |                                                              |
+| &                 | run job in background                      |                                                | Example 3-3                                                  |
+| &&                | AND logical operator                       |                                                |                                                              |
+| -                 | option, prefix                             |                                                | ls -al                                                       |
+| -                 | redirection from/to stdin or stdout        |                                                | cat -  file -   Example 3-4                                  |
+| -                 | previous working directory                 |                                                | cd -                                                         |
+| -                 | minus                                      |                                                |                                                              |
+| =                 | equals                                     |                                                |                                                              |
+| +                 | plus                                       |                                                |                                                              |
+| +                 | option                                     | 一些命令用+打开选项，-关闭选项                 |                                                              |
+| %                 | modulo                                     |                                                |                                                              |
+| ~                 | home directory                             |                                                |                                                              |
+| ~+                | current working directory                  |                                                |                                                              |
+| ~-                | previous working directory                 |                                                |                                                              |
+| 等号波浪号        | regexp match                               |                                                |                                                              |
+| ^                 | beginning of line                          |                                                |                                                              |
+| ^ ^^              | uppercase conversion                       |                                                | var=veryMixedUpVariable;echo ${var^^}  # VERYMIXEDUPVARIABLE |
+| Ctrl-S Ctrl-Q     | suspend/resume stdin                       |                                                |                                                              |
+| Ctrl-W            | erase to the last whitespace               |                                                |                                                              |
+| Ctrl-U            | erase a line of input                      |                                                |                                                              |
+| $IFS              | whitespace                                 |                                                |                                                              |

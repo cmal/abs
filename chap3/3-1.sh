@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# Example 3-1. 代码块和IO重定向
+
 # 从 /etc/fstab 中读行
 
-File=/etc/fstab
+File=/etc/fstab  # bash中空格很重要
 
 {
     read line1
