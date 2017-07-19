@@ -26,3 +26,68 @@ A variable's name is, in fact, a reference, a pointer to the memory location(s) 
 * variable assignment
 = 可能是赋值，也可能是 test 操作符，取决于上下文
 = -eq 都可用于测试
+
+* Bash variables are untyped
+Bash 中的变量是无类型的，都是字符串，只不过Bash在不同的上下文中允许他们进行算术运算和变量比较
+
+Bash 允许声明变量
+
+* Special Variable Types
+Local variables
+Environmental variables
+
+shell 启动的时候，根据自身的环境变量创建shell变量，其子进程继承它的环境
+
+export 变量
+report to the environment local to the script
+脚本中的子进程中export的变量不会影响到shell本身，只在脚本的子进程中起作用
+
+* Positional parameters
+$0, $1, $2, ...
+$0是脚本本身的名字，$1是第一个参数，$2是第二个参数
+
+$*  表示上述所有参数，使用时需要加引号
+$@  与$@相同，但是每个参数都 quoted string
+$#  表示脚本接收到的参数的个数
+
+#+BEGIN_SRC sh
+args=$#           # Number of args passed.
+lastarg=${!args}
+# Note: This is an *indirect reference* to $args ...
+# Or:       lastarg=${!#}             (Thanks, Chris Monson.)
+# This is an *indirect reference* to the $# variable.
+# Note that lastarg=${!$#} doesn't work.
+#+END_SRC
+
+null variable assignment
+
+#+BEGIN_SRC sh
+variable1_=$1_  # Rather than variable1=$1
+# This will prevent an error, even if positional parameter is absent.
+
+critical_argument01=$variable1_
+
+# The extra character can be stripped off later, like so.
+variable1=${variable1_/_/}
+# Side effects only if $variable1_ begins with an underscore.
+# This uses one of the parameter substitution templates discussed later.
+# (Leaving out the replacement pattern results in a deletion.)
+
+#  A more straightforward way of dealing with this is
+#+ to simply test whether expected positional parameters have been passed.
+if [ -z $1 ]
+then
+  exit $E_MISSING_POS_PARAM
+fi
+
+#  However, as Fabian Kreutz points out,
+#+ the above method may have unexpected side-effects.
+#  A better method is parameter substitution:
+#         ${1:-$DefaultVal}
+#  See the "Parameter Substition" section
+#+ in the "Variables Revisited" chapter.
+#+END_SRC
+
+command line $0 is the name of shell
+
+请 man execv

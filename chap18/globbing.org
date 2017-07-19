@@ -1,0 +1,18 @@
+* globbing
+Bash 本身不认识 REGEX，是命令和工具来解释 REGEX 的。如 sed 和 awk
+
+但是 Bash 执行 filename expansion
+
+filename expansion 也叫 globbing
+globbing 用的不是标准 REGEXP，而是用的 wild cards 通配符
+
+globbing 解释以下 wild cards:
+  *
+  ?
+  [] 中的字符
+  一些其他特殊字符如 ^ 表示否定匹配
+
+通配符有限制，如 * 不能匹配以 . 开头的文件名如 .bashrc
+? 也不是在 REGEXP 中的意义
+注意通配符匹配文件名的时候，?, *, [.] 都不会匹配 "."
+但是 dotglob 选项可以把这一特性关闭
