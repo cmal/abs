@@ -44,6 +44,19 @@ bash$ echo -e "x\ty"
 x       y
 #+END_EXAMPLE
 
+单引号中的'不起作用了，有单引号的字符串需要拆开来写
 
+#+BEGIN_SRC sh
+echo "Why can't I write 's between single quotes"
+
+echo
+
+# The roundabout method.
+echo 'Why can'\''t I write '"'"'s between single quotes'
+#    |-------|  |----------|   |-----------------------|
+# Three single-quoted strings, with escaped and quoted single quotes between.
+
+# This example courtesy of Stéphane Chazelas.
+#+END_SRC
 
 * escaping
