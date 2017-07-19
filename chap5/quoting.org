@@ -1,5 +1,49 @@
 * quoting
   保护特殊字符被重新解释和展开
 
+$ ls -l [Vv]*  # 列出以V或v开头的文件
+$ ls -l '[Vv]*'  # 列出文件名为字符串[Vv]*的文件
+
+但是某些程序和工具会解释或展开在 quoted string 中的字符串，
+quoted string 的作用只是保护 string 被 shell 解释和展开，以便传递给程序使用，
+使用它们的程序可以解释和展开这些字符串
+
+$ grep '[Ff]irst' *.txt
+file1.txt:This is the first line of file1.txt.
+file2.txt:This is the First line of file2.txt.
+
+quoting 也可以压缩传给 echo 的内容中的 newline
+
+$ echo $(ls -l)   # 压缩显示
+$ echo "$(ls -l)"  # 完整显示
+
 * quoting variables
+双引号防止除了 $ ` \ 以外的其他特殊字符的解释
+注意脚本 [[file:5-0.sh][5-0.sh]] 的第一部分在命令行中和在脚本中执行的结果是不一样的，请在脚本中执行
+
+#+BEGIN_EXAMPLE
+bash$ echo hello\!
+hello!
+bash$ echo "hello\!"
+hello\!
+bash$ echo \
+>
+bash$ echo "\"
+>
+bash$ echo \a
+a
+bash$ echo "\a"
+\a
+bash$ echo x\ty
+xty
+bash$ echo "x\ty"
+x\ty
+bash$ echo -e x\ty
+xty
+bash$ echo -e "x\ty"
+x       y
+#+END_EXAMPLE
+
+
+
 * escaping
