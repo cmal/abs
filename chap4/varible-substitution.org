@@ -1,3 +1,28 @@
 * variable substitution
+The name of a variable is a placeholder for its value, the data it holds.
+Referencing (retrieving) its value is called variable substitution.
 
 $
+变量在声明和赋值的时候不加 $，其他时候都加 $，
+比如，在unset的时候，被export的时候，在(())算术表达式中，在表示signal的时候；
+赋值有3种情况，=号赋值，在read语句中，在for循环的开头
+
+$variable 实际是 ${variable} 的简化形式
+
+echo "$uninitialized"                                # (blank line)
+let "uninitialized += 5"                             # Add 5 to it.
+echo "$uninitialized"                                # 5
+
+#  Conclusion:
+#  An uninitialized variable has no value,
+#+ however it evaluates as 0 in an arithmetic operation.
+
+左值，右值，引用，指针
+Technically, the name of a variable is called an lvalue, meaning that it appears on the left side of an assignment statment, as in VARIABLE=23.
+A variable's value is an rvalue, meaning that it appears on the right side of an assignment statement, as in VAR2=$VARIABLE.
+
+A variable's name is, in fact, a reference, a pointer to the memory location(s) where the actual data associated with that variable is kept.
+
+* variable assignment
+= 可能是赋值，也可能是 test 操作符，取决于上下文
+= -eq 都可用于测试

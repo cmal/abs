@@ -10,8 +10,8 @@
 | .                 | dot command                                | 同 source 命令                                 |                                                              |
 | .                 | dot as a component of a filename           |                                                |                                                              |
 | .                 | dot character match                        |                                                |                                                              |
-| "                 | partial quoting                            | preserves most special chars                   |                                                              |
-| '                 | full quoting                               | perserves all special chars                    |                                                              |
+| "                 | partial/weak quoting                       | preserves most special chars                   |                                                              |
+| '                 | full/strong quoting                        | perserves all special chars                    |                                                              |
 | ,                 | comma operator                             | 连接算术运算，返回最后一个                     |                                                              |
 | " '               | lowercase conversion                       | 参数替换                                       |                                                              |
 | \                 | escape                                     | 单字符转义                                     |                                                              |
