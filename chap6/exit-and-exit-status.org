@@ -1,0 +1,15 @@
+* exit and exit status
+
+  the returned value is available to the script's parent process.
+
+  每个命令都返回一个 exit status, 也叫作 return status / exit code.
+  命令成功返回0，命令失败返回非0，非0是 error code
+  error code 范围是 0 - 255
+  用法是 exit nnn
+
+  当 script 的结尾是 exit 时，其返回值是最后一个 command 的返回值
+  script 的结尾是 exit, exit $?, 或者忽略 exit 都一样
+
+  $? 读取最后一个命令的返回值
+
+  在 shell 中执行完一个脚本，$? 是脚本中最后一个命令的返回值

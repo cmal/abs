@@ -1,0 +1,267 @@
+#+OPTIONS linkdisplay:t
+* tests
+** Test Constructs
+
+if/then 检查上一个命令的返回结果是不是0
+
+[ 将其参数当作比较表达式，或 测试并返回 exit status 作为比较结果的文件
+
+2.02 以后，Bash 引入 [[ ]] 测试命令。[[ 是关键字，不是命
+[[ ]] 命令执行比较，返回 exit status
+#+BEGIN_EXAMPLE
+[[ $a -lt $b ]]
+#+END_EXAMPLE
+
+(( )) 和 let 结构返回 exit status，根据算术表达式的求值结果是否为 non-zero
+non-zero:  $? => 0
+zero:      $? => 1
+
+#+BEGIN_EXAMPLE
+(( 0 && 1 ))                 # Logical AND
+echo $?     # 1     ***
+# And so ...
+let "num = (( 0 && 1 ))"
+echo $num   # 0
+# But ...
+let "num = (( 0 && 1 ))"
+echo $?     # 1     ***
+
+
+(( 200 || 11 ))              # Logical OR
+echo $?     # 0     ***
+# ...
+let "num = (( 200 || 11 ))"
+echo $num   # 1
+let "num = (( 200 || 11 ))"
+echo $?     # 0     ***
+
+
+(( 200 | 11 ))               # Bitwise OR
+echo $?                      # 0     ***
+# ...
+let "num = (( 200 | 11 ))"
+echo $num                    # 203
+let "num = (( 200 | 11 ))"
+echo $?                      # 0     ***
+
+# The "let" construct returns the same exit status
+#+ as the double-parentheses arithmetic expansion.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+# Again, note that the exit status of an arithmetic expression is not an error value.
+var=-2 && (( var+=2 ))
+echo $?                   # 1
+# ???
+var=-2 && (( var+=2 )) && echo $var
+                          # Will not echo $var!
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+if cmp a b &> /dev/null  # Suppress output.
+then echo "Files a and b are identical."
+else echo "Files a and b differ."
+fi
+
+# The very useful "if-grep" construct:
+# -----------------------------------
+if grep -q Bash file
+  then echo "File contains at least one occurrence of Bash."
+fi
+
+word=Linux
+letter_sequence=inu
+if echo "$word" | grep -q "$letter_sequence"
+# The "-q" option to grep suppresses output.
+then
+  echo "$letter_sequence found in $word"
+else
+  echo "$letter_sequence not found in $word"
+fi
+
+
+if COMMAND_WHOSE_EXIT_STATUS_IS_0_UNLESS_ERROR_OCCURRED
+  then echo "Command succeeded."
+  else echo "Command failed."
+fi
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+if [ condition-true ]
+then
+   command 1
+   command 2
+   ...
+else  # Or else ...
+      # Adds default code block executing if original condition tests false.
+   command 3
+   command 4
+   ...
+fi
+#+END_EXAMPLE
+
+if .. then .. elif .. then .. else .. fi
+#+BEGIN_EXAMPLE
+if [ condition1 ]
+then
+   command1
+   command2
+   command3
+elif [ condition2 ]
+# Same as else if
+then
+   command4
+   command5
+else
+   default-command
+fi
+#+END_EXAMPLE
+
+[[ 是来自 ksh88 的多功能版本的 [
+[[ 内不执行 filename expansion 和 word splitting, 但是执行 parameter expansion 和 command substitution
+在脚本中使用这一结构可以防止许多 logic error
+如 && || < > 在 [[ 内可以使用，但是在 [ 内不行
+[[ 内还可以进行 8/16 进制常数的算术求值 arithmetic evaluation
+
+#+BEGIN_EXAMPLE
+file=/etc/passwd
+
+if [[ -e $file ]]
+then
+  echo "Password file exists."
+fi
+
+# [[ Octal and hexadecimal evaluation ]]
+# Thank you, Moritz Gronbach, for pointing this out.
+
+
+decimal=15
+octal=017   # = 15 (decimal)
+hex=0x0f    # = 15 (decimal)
+
+if [ "$decimal" -eq "$octal" ]
+then
+  echo "$decimal equals $octal"
+else
+  echo "$decimal is not equal to $octal"       # 15 is not equal to 017
+fi      # Doesn't evaluate within [ single brackets ]!
+
+if [ "$decimal" -eq "$hex" ]
+then
+  echo "$decimal equals $hex"
+else
+  echo "$decimal is not equal to $hex"       # 15 is not equal to 017
+fi      # Doesn't evaluate within [ single brackets ]!
+# bash: [: 0x0f: integer expression expected
+
+if [[ "$decimal" -eq "$octal" ]]
+then
+  echo "$decimal equals $octal"                # 15 equals 017
+else
+  echo "$decimal is not equal to $octal"
+fi      # Evaluates within [[ double brackets ]]!
+
+if [[ "$decimal" -eq "$hex" ]]
+then
+  echo "$decimal equals $hex"                  # 15 equals 0x0f
+else
+  echo "$decimal is not equal to $hex"
+fi      # [[ $hexadecimal ]] also evaluates!
+#+END_EXAMPLE
+
+在 if 之后，test, [, [[ 都不是严格必要的
+
+if COMMAND 结构返回 COMMAND 的 exit status
+
+当与 list construct 合用时，[ , [[ 内的条件可以脱离 if 而存在
+
+#+BEGIN_EXAMPLE
+dir=/home/bozo
+
+if cd "$dir" 2>/dev/null; then   # "2>/dev/null" hides error message.
+  echo "Now in $dir."
+else
+  echo "Can't change to $dir."
+fi
+
+var1=20
+var2=22
+[ "$var1" -ne "$var2" ] && echo "$var1 is not equal to $var2"
+
+home=/home/bozo
+[ -d "$home" ] || echo "$home directory does not exist."
+#+END_EXAMPLE
+
+注意 (( )) 结构与此显著不同, 上面已有说明, [[file:7-3.sh][7-3.sh]]
+
+关于 [ 的说明
+[ is a token which invokes the test command
+A token is a symbol or short string with a special meaning attached to it (a meta-meaning).
+In Bash, certain tokens, such as [ and . (dot-command), may expand to keywords and commands.
+
+** File test operators
+-e file exists
+-f file is a regular file, not a directory or device file
+-s file is not zero size
+-d file is a directory
+-b file is a block device
+-c file is a character device
+
+#+BEGIN_SRC sh
+device0="/dev/sda2"    # /   (root directory)
+if [ -b "$device0" ]
+then
+  echo "$device0 is a block device."
+fi
+# /dev/sda2 is a block device.
+device1="/dev/ttyS1"   # PCMCIA modem card.
+if [ -c "$device1" ]
+then
+  echo "$device1 is a character device."
+fi
+# /dev/ttyS1 is a character device.
+#+END_SRC
+
+-b file is a pipe
+#+BEGIN_SRC sh
+function show_input_type()
+{
+   [ -p /dev/fd/0 ] && echo PIPE || echo STDIN
+}
+show_input_type "Input"                           # STDIN
+echo "Input" | show_input_type                    # PIPE
+# This example courtesy of Carl Anderson.
+#+END_SRC
+
+-h file is a symbolic link
+-L file is a symbolic link
+-S file is a socket
+-t file(descriptor) is associated with a terminal device. This test option may be used to check whether the stdin [ -t 0 ] or stdout [ -t 1 ] in a given script is a terminal.
+-r file has read permission (for the user running the test)
+-w file has write permission (for the user running the test)
+-x file has execute permission (for the user running the test)
+-g set-group-id(sgid) flag set on file or directory. If a directory has the sgid flag set, then a file created within that directory belongs to the group that owns the directory,
+   not necessarily to the group of the user who created the file.  This may be useful for a directory shared by a workgroup.
+-u set-user-id (suid) flag set on file. A binary owned by root with set-user-id flag set runs with root privileges, even when an ordinary user invokes it.  This is useful for executables
+   (such as pppd and cdrecord) that need to access system hardware. Lacking the suid flag, these binaries could not be invoked by a non-root user.
+   A file with the suid flag set shows an s in its permissions.
+   -rwsr-xr-t    1 root       178236 Oct  2  2000 /usr/sbin/pppd
+-k sticky bit set. Commonly known as the sticky bit, the save-text-mode flag is a special type of file permission.
+   If a file has this flag set, that file will be kept in cache memory, for quicker access.
+   If set on a directory, it restricts write permission. Setting the sticky bit adds a t to the permissions on the file or directory listing.
+   This restricts altering or deleting specific files in that directory to the owner of those files.
+   drwxrwxrwt    7 root         1024 May 19 21:26 tmp/
+   If a user does not own a directory that has the sticky bit set, but has write permission in that directory, she can only delete those files that she owns in it.
+   This keeps users from inadvertently overwriting or deleting each other's files in a publicly accessible directory, such as /tmp.
+   (The owner of the directory or root can, of course, delete or rename files there.)
+-O you are owner of file
+-G group-id of file same as yours
+-N file modified since it was last read
+f1 -nt f2 file f1 is newer than f2
+f1 -ot f2 file f1 is older than f2
+f1 -ef f2 files f1 and f2 are hard links to the same file
+!  "not" -- reverses the sense of the tests above (returns true if condition absent).
+
+** Other Comparson Operators
+** Nested if/then Condition Tests
+** Testing Your Knowledge of Tests
