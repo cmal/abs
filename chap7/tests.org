@@ -206,33 +206,6 @@ In Bash, certain tokens, such as [ and . (dot-command), may expand to keywords a
 -d file is a directory
 -b file is a block device
 -c file is a character device
-
-#+BEGIN_SRC sh
-device0="/dev/sda2"    # /   (root directory)
-if [ -b "$device0" ]
-then
-  echo "$device0 is a block device."
-fi
-# /dev/sda2 is a block device.
-device1="/dev/ttyS1"   # PCMCIA modem card.
-if [ -c "$device1" ]
-then
-  echo "$device1 is a character device."
-fi
-# /dev/ttyS1 is a character device.
-#+END_SRC
-
--b file is a pipe
-#+BEGIN_SRC sh
-function show_input_type()
-{
-   [ -p /dev/fd/0 ] && echo PIPE || echo STDIN
-}
-show_input_type "Input"                           # STDIN
-echo "Input" | show_input_type                    # PIPE
-# This example courtesy of Carl Anderson.
-#+END_SRC
-
 -h file is a symbolic link
 -L file is a symbolic link
 -S file is a socket
@@ -261,7 +234,81 @@ f1 -nt f2 file f1 is newer than f2
 f1 -ot f2 file f1 is older than f2
 f1 -ef f2 files f1 and f2 are hard links to the same file
 !  "not" -- reverses the sense of the tests above (returns true if condition absent).
+expr1 -a expr2  true if both expr1 and expr2 are true
 
-** Other Comparson Operators
+#+BEGIN_SRC sh
+device0="/dev/sda2"    # /   (root directory)
+if [ -b "$device0" ]
+then
+  echo "$device0 is a block device."
+fi
+# /dev/sda2 is a block device.
+device1="/dev/ttyS1"   # PCMCIA modem card.
+if [ -c "$device1" ]
+then
+  echo "$device1 is a character device."
+fi
+# /dev/ttyS1 is a character device.
+#+END_SRC
+
+-b file is a pipe
+#+BEGIN_SRC sh
+function show_input_type()
+{
+   [ -p /dev/fd/0 ] && echo PIPE || echo STDIN
+}
+show_input_type "Input"                           # STDIN
+echo "Input" | show_input_type                    # PIPE
+# This example courtesy of Carl Anderson.
+#+END_SRC
+
+
+** Other Comparison Operators
+
+binary comparison operator 二元比较符
+*** integer comparison
+-eq
+-ne
+-gt
+-ge
+-lt
+-le
+<
+<=
+>
+>=
+
+*** string comparison
+=     if [ "$a" = "$b" ]  这里空白很重要
+==    if [ "$a" == "$b" ]  [[与双中括号的不同]]
+!=    if [ "$a" != "$b" ]  双括号是 pattern matching
+<     if [ "$a" \< "$b" ]  双括号不用转义 <
+>     if [ "$a" \> "$b" ]  双括号不用转义 >
+-z    string is null, that is, has zero length [[空字符串判断]]
+-n    string is not null. *You should ALWAYS quote a tested string.*
+      For example, an uninitialized variable is *not null*, but an quoted uninitialized variable is null.
+无参数 [ $string ] 测试 string 是否是 null, 但最好加上引号
+
+
+<<<与双中括号的不同>>>
+#+BEGIN_SRC sh
+  [[ $a == z* ]]   # True if $a starts with an "z" (pattern matching).
+  [[ $a == "z*" ]] # True if $a is equal to z* (literal matching).
+  [ $a == z* ]     # File globbing and word splitting take place.  做的是文件名的匹配？
+  [ "$a" == "z*" ] # True if $a is equal to z* (literal matching).
+#+END_SRC
+
+<<<空字符串判断>>>
+#+BEGIN_SRC sh
+  String=''   # Zero-length ("null") string variable.
+  if [ -z "$String" ]
+  then
+    echo "\$String is null."
+  else
+    echo "\$String is NOT null."
+  fi     # $String is null.
+#+END_SRC
+[[file:7-6.sh][更多例子]]
+
 ** Nested if/then Condition Tests
 ** Testing Your Knowledge of Tests

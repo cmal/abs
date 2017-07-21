@@ -33,7 +33,8 @@
 ##########
 
 linkchk () {
-    for element in $1/*; do
+    for element in $1/*; do    # 这就是字符串拼接，$1是目录，/* 表示目录下的所有文件
+      echo $element
       [ -h "$element" -a ! -e "$element" ] && echo \"$element\"
       [ -d "$element" ] && linkchk $element
     # Of course, '-h' tests for symbolic link, '-d' for directory.
