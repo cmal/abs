@@ -310,5 +310,69 @@ binary comparison operator 二元比较符
 #+END_SRC
 [[file:7-6.sh][更多例子]]
 
+*** compound comparison
+-a    逻辑与:  exp1 -a exp2 returns true if both exp1 and exp2 are true.
+-o    逻辑或:  exp1 -o exp2 returns true if either exp1 or exp2 is true.
+
+在双括号中要用 || 和 &&
+注意 || 和 && 是短路操作符，-a 和 -o 不是:
+
+#+BEGIN_SRC sh
+  if [ "$expr1" -a "$expr2" ]
+  then
+    echo "Both expr1 and expr2 are true."
+  else
+    echo "Either expr1 or expr2 is false."
+  fi
+
+  # 注意
+  [ 1 -eq 1 ] && [ -n "`echo true 1>&2`" ]   # true
+  [ 1 -eq 2 ] && [ -n "`echo true 1>&2`" ]   # (no output)
+  # ^^^^^^^ False condition. So far, everything as expected.
+
+  # However ...
+  [ 1 -eq 2 -a -n "`echo true 1>&2`" ]       # true
+  # ^^^^^^^ False condition. So, why "true" output?
+
+  # Is it because both condition clauses within brackets evaluate?
+  [[ 1 -eq 2 && -n "`echo true 1>&2`" ]]     # (no output)
+  # No, that's not it.
+  # Apparently && and || "short-circuit" while -a and -o do not.
+#+END_SRC
+
 ** Nested if/then Condition Tests
+if/then 测试可以嵌套使用
+#+BEGIN_SRC sh
+  a=3
+  if [ "$a" -gt 0 ]
+  then
+    if [ "$a" -lt 5 ]
+    then
+      echo "The value of \"a\" lies somewhere between 0 and 5."
+    fi
+  fi
+
+  # Same result as:
+  if [ "$a" -gt 0 ] && [ "$a" -lt 5 ]
+  then
+    echo "The value of \"a\" lies somewhere between 0 and 5."
+  fi
+#+END_SRC
+
 ** Testing Your Knowledge of Tests
+
+#+BEGIN_SRC sh
+if [ -f $HOME/.Xclients ]; then
+  exec $HOME/.Xclients
+elif [ -f /etc/X11/xinit/Xclients ]; then
+  exec /etc/X11/xinit/Xclients
+else
+     # failsafe settings.  Although we should never get here
+     # (we provide fallbacks in Xclients as well) it can't hurt.
+     xclock -geometry 100x100-5+5 &
+     xterm -geometry 80x50-50+150 &
+     if [ -f /usr/bin/netscape -a -f /usr/share/doc/HTML/index.html ]; then
+         netscape /usr/share/doc/HTML/index.html &
+     fi
+fi
+#+END_SRC

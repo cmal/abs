@@ -1,0 +1,41 @@
+* Operations and Related Topics
+
+** 8.1. Operators
+
+*** assignment
+= variable assignment. No spaces allowed.
+
+注意 = 用作 test operator 时，两边要有括号
+
+#+BEGIN_SRC sh
+  #   =  as a test operator
+
+  if [ "$string1" = "$string2" ]
+  then
+     command
+  fi
+
+  #  if [ "X$string1" = "X$string2" ] is safer,
+  #+ to prevent an error message should one of the variables be empty.
+  #  (The prepended "X" characters cancel out.)
+#+END_SRC
+
+*** arithmetic operators
+
+| +  | plus           |
+| -  | minus          |
+| *  | multiplication |
+| /  | division       |
+| ** | exponentiation |
+| %  | modulo         |
+
+#+BEGIN_SRC sh
+    # Bash, version 2.02, introduced the "**" exponentiation operator.
+    let "z=5**3"    # 5 * 5 * 5
+    echo "z = $z"   # z = 125
+#+END_SRC
+
+*** miscellaneous operators
+** 8.2. Numerical Constants
+** 8.3. The Double-Parentheses Construct
+** 8.4. Operator Precedence

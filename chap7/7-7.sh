@@ -24,7 +24,7 @@ then
   exit $E_NOTFOUND
 fi
 
-if [ ${filename##*.} != "gz" ]
+if [ ${filename##*.} != "gz" ]  # ${filename##*.} = Strip out the longest match of *. in $filename
 # Using bracket in variable substitution.
 then
   echo "File $1 is not a gzipped file!"

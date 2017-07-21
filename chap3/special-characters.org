@@ -44,7 +44,7 @@
 | (())              | integer expansion                          | 对其中的 integer expression 展开并求值         |                                                              |
 | > &> >& >> < <>   | redirection                                | IO重定向                                       | > f 重定向 output 到f                                        |
 |                   |                                            |                                                | &>f 重定向 stdout/stderr 到f                                 |
-|                   |                                            |                                                | >&2 重定向 stdout 到 stderr                                  |
+|                   |                                            |                                                | 1>&2 重定向 stdout 到 stderr  [[常用 File Descriptor]]           |
 |                   |                                            |                                                | >>f 重定向 output 追加到f                                    |
 |                   |                                            |                                                | [i]<>f 以读写方式打开f，将file descriptor赋值给i             |
 | < >               | ASCII comparison                           | 比较字符串，整数                               |                                                              |
@@ -74,3 +74,12 @@
 | Ctrl-W            | erase to the last whitespace               |                                                |                                                              |
 | Ctrl-U            | erase a line of input                      |                                                |                                                              |
 | $IFS              | whitespace                                 |                                                |                                                              |
+
+
+<<<常用 File Descriptor>>>
+0 stdin
+1 stdout
+2 stderr
+
+一般来说，1> 可以省略成 >
+1>& 可以省略成 >&
