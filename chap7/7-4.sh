@@ -24,8 +24,7 @@
 #+ to the args passed.
 ######################
 
-[ $# -eq 0 ] && directorys=`pwd` || directorys=$@
-
+[ $# -eq 0 ] && directorys=`pwd` || directorys=$@  # $@ 表示所有参数, 请看 chap4
 
 #  Setup the function linkchk to check the directory it is passed
 #+ for files that are links and don't exist, then print them quoted.
