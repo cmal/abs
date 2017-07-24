@@ -1,0 +1,44 @@
+* Another Look At Variables
+** Internal Variables
+
+| $BASH             | The path to the Bash binary itself                                    |
+| $BASH_ENV         | Bash startup file                                                     |
+| $BASH_SUBSHELL    | subshell level                                                        |
+| $BASHPID          | Process ID of the current instance of Bash                            |
+| $BASH_VERSINFO[n] | a 6 element array indicating current bash version info                |
+| $BASH_VERSION     |                                                                       |
+| $CDPATH           | 设置cd命令的默认起点                                                  |
+| $DIRSTACK         | The top value in the directory stack (affected by pushd/popd)         |
+| $EDITOR           | the default editor invoked by a script                                |
+| $EUID             | "effective" user ID number. Identification number of whatever         |
+|                   | identity the current user has assumed, perhaps by means of su.        |
+| $FUNCNAME         | name of the current function                                          |
+| $GLOBIGNORE       | A list of filename patterns to be excluded from matching in globbing. |
+| $GROUPS           | Groups current user belongs to                                        |
+| $HOME             |                                                                       |
+| $HOSTNAME         |                                                                       |
+| $HOSTTYPE         |                                                                       |
+
+
+#+BEGIN_SRC sh
+  for n in 0 1 2 3 4 5
+  do
+    echo "BASH_VERSINFO[$n] = ${BASH_VERSINFO[$n]}"
+  done
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+$ cd bash-doc
+cd: bash-doc: No such file or directory
+$ CDPATH=/usr/share/doc
+$ cd bash-doc
+/usr/share/doc/bash-doc
+$ echo $PWD
+/usr/share/doc/bash-doc
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+$ echo $GROUPS
+$ echo ${GROUPS[1]}
+$ echo ${GROUPS[5]}
+#+END_EXAMPLE
