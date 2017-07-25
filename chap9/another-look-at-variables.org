@@ -18,6 +18,13 @@
 | $HOME             |                                                                       |
 | $HOSTNAME         |                                                                       |
 | $HOSTTYPE         |                                                                       |
+| $IFS              |                                                                       |
+| $IGNOREEOF        |                                                                       |
+| $LC_COLLATE       | controls collation order in filename expansion and pattern matching   |
+| $LC_CTYPE         | controls character interpretation in globbing and pattern matching    |
+| $LINENO           | the line number of the shell script in which this variable appears    |
+| $MACHTYPE         | machine type                                                          |
+|                   |                                                                       |
 
 
 #+BEGIN_SRC sh
