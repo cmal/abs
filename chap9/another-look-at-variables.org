@@ -1,46 +1,55 @@
 * Another Look At Variables
 ** Internal Variables
 
-| $BASH             | The path to the Bash binary itself                                         |
-| $BASH_ENV         | Bash startup file                                                          |
-| $BASH_SUBSHELL    | subshell level                                                             |
-| $BASHPID          | Process ID of the current instance of Bash                                 |
-| $BASH_VERSINFO[n] | a 6 element array indicating current bash version info                     |
-| $BASH_VERSION     |                                                                            |
-| $CDPATH           | 设置cd命令的默认起点                                                       |
-| $DIRSTACK         | The top value in the directory stack (affected by pushd/popd)              |
-| $EDITOR           | the default editor invoked by a script                                     |
-| $EUID             | "effective" user ID number. Identification number of whatever              |
-|                   | identity the current user has assumed, perhaps by means of su.             |
-| $FUNCNAME         | name of the current function                                               |
-| $GLOBIGNORE       | A list of filename patterns to be excluded from matching in globbing.      |
-| $GROUPS           | Groups current user belongs to                                             |
-| $HOME             |                                                                            |
-| $HOSTNAME         |                                                                            |
-| $HOSTTYPE         |                                                                            |
-| $IFS              |                                                                            |
-| $IGNOREEOF        |                                                                            |
-| $LC_COLLATE       | controls collation order in filename expansion and pattern matching        |
-| $LC_CTYPE         | controls character interpretation in globbing and pattern matching         |
-| $LINENO           | the line number of the shell script in which this variable appears         |
-| $MACHTYPE         | machine type                                                               |
-| $OLDPWD           | OLD-Print-Working-Directory                                                |
-| $OSTYPE           | operating system type                                                      |
-| $PATH             |                                                                            |
-| $PIPESTATUS       | Array variable holding exit status(es) of last executed foreground pipe    |
-| $PPID             | process ID(pid) of its parents process                                     |
-| $PROMPT_COMMAND   | A variable holding a command to be executed just before the primary prompt |
-| $PS1              | the main prompt                                                            |
-| $PS2              | the secondary prompt                                                       |
-| $PS3              | the tertiary prompt                                                        |
-| $PS4              | the quartenary prompt                                                      |
-| $PWD              | working directory, analog to `pwd` builtin command                         |
-| $REPLY            | The default value when a variable is not supplied to read                  |
-| $SECONDS          | The number of seconds the script has been running                          |
-| $SHELLOPTS        | the list of enabled shell options, a readonly variable                     |
-| $SHLVL            | Shell level, how deeply Bash is nested.                                    |
-| $TMOUT            | seconds to log out                                                         |
-| $UID              | user ID number                                                             |
+| $BASH             | The path to the Bash binary itself                                              |
+| $BASH_ENV         | Bash startup file                                                               |
+| $BASH_SUBSHELL    | subshell level                                                                  |
+| $BASHPID          | Process ID of the current instance of Bash                                      |
+| $BASH_VERSINFO[n] | a 6 element array indicating current bash version info                          |
+| $BASH_VERSION     |                                                                                 |
+| $CDPATH           | 设置cd命令的默认起点                                                            |
+| $DIRSTACK         | The top value in the directory stack (affected by pushd/popd)                   |
+| $EDITOR           | the default editor invoked by a script                                          |
+| $EUID             | "effective" user ID number. Identification number of whatever                   |
+|                   | identity the current user has assumed, perhaps by means of su.                  |
+| $FUNCNAME         | name of the current function                                                    |
+| $GLOBIGNORE       | A list of filename patterns to be excluded from matching in globbing.           |
+| $GROUPS           | Groups current user belongs to                                                  |
+| $HOME             |                                                                                 |
+| $HOSTNAME         |                                                                                 |
+| $HOSTTYPE         |                                                                                 |
+| $IFS              |                                                                                 |
+| $IGNOREEOF        |                                                                                 |
+| $LC_COLLATE       | controls collation order in filename expansion and pattern matching             |
+| $LC_CTYPE         | controls character interpretation in globbing and pattern matching              |
+| $LINENO           | the line number of the shell script in which this variable appears              |
+| $MACHTYPE         | machine type                                                                    |
+| $OLDPWD           | OLD-Print-Working-Directory                                                     |
+| $OSTYPE           | operating system type                                                           |
+| $PATH             |                                                                                 |
+| $PIPESTATUS       | Array variable holding exit status(es) of last executed foreground pipe         |
+| $PPID             | process ID(pid) of its parents process                                          |
+| $PROMPT_COMMAND   | A variable holding a command to be executed just before the primary prompt      |
+| $PS1              | the main prompt                                                                 |
+| $PS2              | the secondary prompt                                                            |
+| $PS3              | the tertiary prompt                                                             |
+| $PS4              | the quartenary prompt                                                           |
+| $PWD              | working directory, analog to `pwd` builtin command                              |
+| $REPLY            | The default value when a variable is not supplied to read                       |
+| $SECONDS          | The number of seconds the script has been running                               |
+| $SHELLOPTS        | the list of enabled shell options, a readonly variable                          |
+| $SHLVL            | Shell level, how deeply Bash is nested.                                         |
+| $TMOUT            | seconds to log out                                                              |
+| $UID              | user ID number                                                                  |
+| $0, $1, $2, etc.  | Positional parameters                                                           |
+| $#                | Number of command-line arguments or positional parameters                       |
+| $*                | All of the positional parameters, seen as a single word                         |
+| $@                | same as $*, but each parameter is a quoted string                               |
+| $-                | flags passed to scripts, using set (not worked reliably in Bash)  [[file:../chap15/15-16.sh][Example 15-16]] |
+| $!                | PID of last job run in background                                               |
+| $_                | Special variable set to final argument of previous command executed             |
+| $?                | Exit status of a command, function, or the script itself                        |
+| $$                | PID of the script itself                                                        |
 
 
 #+BEGIN_SRC sh
@@ -102,3 +111,87 @@ If, at the command-line, $SHLVL is 1, then in a script it will increment to 2.
 
 $UID is the current user's real id, even if she has temporarily assumed another identity through su. ?? 好像不是
 $UID is a readonly variable, not subject to change from the command line or within a script, and is the counterpart to the id builtin.
+
+
+The variables $ENV, $LOGNAME, $MAIL, $TERM, $USER, and $USERNAME are not Bash builtins.
+These are, however, often set as environmental variables in one of the Bash or login startup files.
+$SHELL, the name of the user's login shell, may be set from /etc/passwd or in an "init" script, and it is likewise not a Bash builtin.
+
+PID by $!:
+#+BEGIN_SRC sh
+LOG=$0.log
+
+COMMAND1="sleep 100"
+
+echo "Logging PIDs background commands for script: $0" >> "$LOG"
+# So they can be monitored, and killed as necessary.
+echo >> "$LOG"
+
+# Logging commands.
+
+echo -n "PID of \"$COMMAND1\":  " >> "$LOG"
+${COMMAND1} &
+echo $! >> "$LOG"
+# PID of "sleep 100":  1506
+
+# Thank you, Jacques Lederer, for suggesting this.
+#+END_SRC
+
+Using $! for job control:
+
+#+BEGIN_SRC sh
+possibly_hanging_job & { sleep ${TIMEOUT}; eval 'kill -9 $!' &> /dev/null; }
+# Forces completion of an ill-behaved program.
+# Useful, for example, in init scripts.
+
+# Thank you, Sylvain Fourmanoit, for this creative use of the "!" variable.
+#+END_SRC
+
+#+BEGIN_SRC sh
+# This example by Matthew Sage.
+# Used with permission.
+
+TIMEOUT=30   # Timeout value in seconds
+count=0
+
+possibly_hanging_job & {
+        while ((count < TIMEOUT )); do
+                eval '[ ! -d "/proc/$!" ] && ((count = TIMEOUT))'
+                # /proc is where information about running processes is found.
+                # "-d" tests whether it exists (whether directory exists).
+                # So, we're waiting for the job in question to show up.
+                ((count++))
+                sleep 1
+        done
+        eval '[ -d "/proc/$!" ] && kill -15 $!'
+        # If the hanging job is running, kill it.
+}
+
+#  -------------------------------------------------------------- #
+
+#  However, this may not not work as specified if another process
+#+ begins to run after the "hanging_job" . . .
+#  In such a case, the wrong job may be killed.
+#  Ariel Meragelman suggests the following fix.
+
+TIMEOUT=30
+count=0
+# Timeout value in seconds
+possibly_hanging_job & {
+
+while ((count < TIMEOUT )); do
+  eval '[ ! -d "/proc/$lastjob" ] && ((count = TIMEOUT))'
+  lastjob=$!
+  ((count++))
+  sleep 1
+done
+eval '[ -d "/proc/$lastjob" ] && kill -15 $lastjob'
+
+}
+
+exit
+#+END_SRC
+
+
+The $$ variable often finds use in scripts to construct "unique" temp file names.
+This is usually simpler than invoking mktemp.
