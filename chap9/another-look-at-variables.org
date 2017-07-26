@@ -40,6 +40,7 @@
 | $SHELLOPTS        | the list of enabled shell options, a readonly variable                     |
 | $SHLVL            | Shell level, how deeply Bash is nested.                                    |
 | $TMOUT            | seconds to log out                                                         |
+| $UID              | user ID number                                                             |
 
 
 #+BEGIN_SRC sh
