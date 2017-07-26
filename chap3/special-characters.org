@@ -1,6 +1,14 @@
 #+STARTUP: entitiespretty
 * Special Characters Found In Scripts and Elsewhere
 
+NOTE:
+more info in  http://tldp.org/LDP/abs/html/refcards.html
+
+or
+
+$ man bash
+
+
 | Special Char      | Name                                       | 作用                                           | Example                                                      |
 |-------------------+--------------------------------------------+------------------------------------------------+--------------------------------------------------------------|
 | #                 | comments                                   |                                                |                                                              |
