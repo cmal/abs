@@ -37,7 +37,9 @@
 | $PWD              | working directory, analog to `pwd` builtin command                         |
 | $REPLY            | The default value when a variable is not supplied to read                  |
 | $SECONDS          | The number of seconds the script has been running                          |
-|                   |                                                                            |
+| $SHELLOPTS        | the list of enabled shell options, a readonly variable                     |
+| $SHLVL            | Shell level, how deeply Bash is nested.                                    |
+| $TMOUT            | seconds to log out                                                         |
 
 
 #+BEGIN_SRC sh
@@ -93,3 +95,5 @@ P4='$(read time junk < /proc/$$/schedstat; echo "@@@ $time @@@ " )'
 set -x
 # Various commands follow ...
 #+END_EXAMPLE
+
+If, at the command-line, $SHLVL is 1, then in a script it will increment to 2.
