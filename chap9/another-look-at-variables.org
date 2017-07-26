@@ -98,3 +98,7 @@ set -x
 #+END_EXAMPLE
 
 If, at the command-line, $SHLVL is 1, then in a script it will increment to 2.
+
+
+$UID is the current user's real id, even if she has temporarily assumed another identity through su. ?? 好像不是
+$UID is a readonly variable, not subject to change from the command line or within a script, and is the counterpart to the id builtin.
