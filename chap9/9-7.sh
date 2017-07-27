@@ -28,7 +28,7 @@ echo ---
 echo 'IFS unchanged, using "$@"'
 c=0
 for i in "$@"
-do echo "$((c+=1)): [$i]"
+do echo "$((c+=1)): [$i]"   # compare to the previous one and the next ones
 done
 echo ---
 

@@ -195,3 +195,33 @@ exit
 
 The $$ variable often finds use in scripts to construct "unique" temp file names.
 This is usually simpler than invoking mktemp.
+
+** Typing variables: declare or typeset
+
+declare (or typeset) builtins: permit modifying the properties of variables
+
+| option | meaning    | example                              |
+|--------+------------+--------------------------------------|
+| -r     | readonly   | declare -r var1=1                    |
+| -i     | integer    | declare -i number                    |
+| -a     | array      | declare -a indices                   |
+| -f     | functions  | declare -f, declare -f function_name |
+| -x     | exports    | declare -x var3                      |
+| -x     | var=$value | declare -x var3=373                  |
+
+
+
+Certain arithmetic operations are permitted for declared integer variables without the need for expr or let.
+
+#+BEGIN_SRC sh
+  n=6/3
+  echo "n = $n"       # n = 6/3
+
+  declare -i n
+  n=6/3
+  echo "n = $n"       # n = 2
+#+END_SRC
+
+A declare -f line with no arguments in a script causes a listing of all the functions previously defined in that script.
+
+A declare -f function_name in a script lists just the function named.
