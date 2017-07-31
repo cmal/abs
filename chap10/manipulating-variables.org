@@ -227,4 +227,38 @@ see 16-9 10-9 10-10 10-11 10-13 A-36 A-41
 
 ** Parameter Substitution
 
-${parameter}
+${parameter} 与 $parameter 相同，即 parameter 变量的值，在某些上下文中只能使用 ${parameter}
+#+BEGIN_SRC sh
+    your_id=${USER}-on-${HOSTNAME}
+    echo "$your_id"
+    #
+    echo "Old \$PATH = $PATH"
+    PATH=${PATH}:/opt/bin  # Add /opt/bin to $PATH for duration of script.
+    echo "New \$PATH = $PATH"
+#+END_SRC
+
+${parameter-default}, ${parameter:-default} 如果 parameter 没有设置，使用 default。
+大多数情况下这两者相同，但是当 parameter 被 declared 但是为 null 的时候有 [[file:parameter-default.sh][差别]]
+
+#+BEGIN_SRC sh
+    var1=1
+    var2=2
+    # var3 is unset.
+
+    echo ${var1-$var2}   # 1
+    echo ${var3-$var2}   # 2
+    #           ^          Note the $ prefix.
+
+    echo ${username-`whoami`}
+    # Echoes the result of `whoami`, if variable $username is still unset.
+#+END_SRC
+
+${parameter=default}, ${parameter:=default} 如果 parameter 没有设置，设置为 default
+
+#+BEGIN_SRC sh
+  echo ${var=abc}   # abc
+  echo ${var=xyz}   # abc
+  # $var had already been set to abc, so it did not change.
+#+END_SRC
+
+${parameter+alt_value}, ${parameter:+alt_value} 如果 parameter 设置了，使用 alt_value，否则使用 null string(空字符串) [[file:alt-or-null.sh][例子]]
