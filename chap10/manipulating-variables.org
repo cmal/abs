@@ -1,5 +1,230 @@
 * Manipulating Variables
 ** Manipulating Strings
+
+Bash 支持两类字符串处理函数，这两类有重叠，语法也不同：
+一类是 parameter substitution
+一类是 expr 命令支持的字符串处理函数
+**** 字符串长度
+
+${#string}
+
+expr length $string  等价于C中的strlen()
+
+expr "$string" : '.*'  例子：
+
+#+BEGIN_EXAMPLE
+  stringZ=abcABC123ABCabc
+  echo ${#stringZ}                 # 15
+  echo `expr length $stringZ`      # 15  syntax error?
+  echo `expr "$stringZ" : '.*'`    # 15
+#+END_EXAMPLE
+
+**** Length of Matching Substring at Beginning of String
+
+expr match "$string" '$substring'     $substring是正则表达式
+
+expr "$string" : '$substring'     $substring是正则表达式
+
+#+BEGIN_EXAMPLE
+  stringZ=abcABC123ABCabc
+  #       |------|
+  #       12345678
+  echo `expr match "$stringZ" 'abc[A-Z]*.2'`   # 8   syntax error?
+  echo `expr "$stringZ" : 'abc[A-Z]*.2'`       # 8
+#+END_EXAMPLE
+
+**** Index
+
+expr index $string $substring    $string中到匹配 $substring 后，返回第一个字符的位置
+
+#+BEGIN_EXAMPLE
+  stringZ=abcABC123ABCabc
+  #       123456 ...
+  echo `expr index "$stringZ" C12`             # 6   syntax error?
+                                               # C position.
+
+  echo `expr index "$stringZ" 1c`              # 3   syntax error?
+  # 'c' (in #3 position) matches before '1'.
+#+END_EXAMPLE
+
+与C中 strchr() 很像
+
+**** Substring Extraction
+
+${string:position}  返回从 $position 开始的 $string 的子字符串。如果 $string 是 * or @, 那么返回从 $position 开始的 [[file:pp.sh][positional parameters]]
+
+${string:position:length} 返回从 $position 开始长度为 $length 的 $string 的子字符串.  其中 $position 和 $length 可以用变量形式表示（parameterize），而不是数值
+
+#+BEGIN_SRC sh
+  stringZ=abcABC123ABCabc
+  #       0123456789.....
+  #       0-based indexing.
+
+  echo ${stringZ:0}                            # abcABC123ABCabc
+  echo ${stringZ:1}                            # bcABC123ABCabc
+  echo ${stringZ:7}                            # 23ABCabc
+
+  echo ${stringZ:7:3}                          # 23A
+                                               # Three characters of substring.
+
+  # Is it possible to index from the right end of the string?
+
+  echo ${stringZ:-4}                           # abcABC123ABCabc
+  # Defaults to full string, as in ${parameter:-default}.
+  # However . . .
+
+  echo ${stringZ:(-4)}                         # Cabc
+  echo ${stringZ: -4}                          # Cabc
+  # Now, it works.
+  # Parentheses or added space "escape" the position parameter.
+
+  # Thank you, Dan Jacobson, for pointing this out.
+#+END_SRC
+
+expr substr $string $position $length  返回从 $position 开始长度为 $length 的 $string 的子字符串
+#+BEGIN_SRC sh
+  stringZ=abcABC123ABCabc
+  #       123456789......
+  #       1-based indexing.
+
+  echo `expr substr $stringZ 1 2`              # ab    syntax error?
+  echo `expr substr $stringZ 4 3`              # ABC   syntax error?
+#+END_SRC
+
+expr match "$string" '\($substring\)'  从 $string 的第一个字符开始匹配正则表达式 $substring
+
+expr "$string" : '\($substring\)'  从 $string 的第一个字符开始匹配正则表达式 $substring
+
+#+BEGIN_SRC sh
+  stringZ=abcABC123ABCabc
+  #       =======
+  echo `expr match "$stringZ" '\(.[b-c]*[A-Z]..[0-9]\)'`   # abcABC1  syntax error?
+  echo `expr "$stringZ" : '\(.[b-c]*[A-Z]..[0-9]\)'`       # abcABC1
+  echo `expr "$stringZ" : '\(.......\)'`                   # abcABC1
+#+END_SRC
+
+expr match "$string" '.*\($substring\)'  从 $string 的结尾往前匹配正则表达式 $substring
+
+expr "$string" : '.*\($substring\)'  从 $string 的结尾往前匹配正则表达式 $substring
+
+#+BEGIN_SRC sh
+  stringZ=abcABC123ABCabc
+  #                ======
+  echo `expr match "$stringZ" '.*\([A-C][A-C][A-C][a-c]*\)'`    # ABCabc  syntax error?
+  echo `expr "$stringZ" : '.*\(......\)'`                       # ABCabc
+#+END_SRC
+
+**** Substring Removal
+
+${string#substring}  删除 $string 从左端开始匹配 $substring 的最短字符串
+${string##substring}  删除 $string 从左端开始匹配 $substring 的最长字符串
+
+#+BEGIN_SRC sh
+  stringZ=abcABC123ABCabc
+  #       |----|          shortest
+  #       |----------|    longest
+
+  echo ${stringZ#a*C}      # 123ABCabc
+  # Strip out shortest match between 'a' and 'C'.
+
+  echo ${stringZ##a*C}     # abc
+  # Strip out longest match between 'a' and 'C'.
+
+  # You can parameterize the substrings.
+
+  X='a*C'
+
+  echo ${stringZ#$X}      # 123ABCabc
+  echo ${stringZ##$X}     # abc
+                          # As above.
+#+END_SRC
+
+${string%substring}  删除 $string 从左端开始匹配 $substring 的最短字符串
+#+BEGIN_SRC sh
+  # Rename all filenames in $PWD with "TXT" suffix to a "txt" suffix.
+  # For example, "file1.TXT" becomes "file1.txt" . . .
+
+  SUFF=TXT
+  suff=txt
+
+  for i in $(ls *.$SUFF)
+  do
+    mv -f $i ${i%.$SUFF}.$suff
+    #  Leave unchanged everything *except* the shortest pattern match
+    ,#+ starting from the right-hand-side of the variable $i . . .
+  done ### This could be condensed into a "one-liner" if desired.
+
+  # Thank you, Rory Winston.
+#+END_SRC
+
+${string%%substring}  删除 $string 从右端开始匹配 $substring 的最长字符串
+#+BEGIN_SRC sh
+  stringZ=abcABC123ABCabc
+  #                    ||     shortest
+  #        |------------|     longest
+
+  echo ${stringZ%b*c}      # abcABC123ABCa
+  # Strip out shortest match between 'b' and 'c', from back of $stringZ.
+
+  echo ${stringZ%%b*c}     # a
+  # Strip out longest match between 'b' and 'c', from back of $stringZ.
+#+END_SRC
+
+${string/substring/replacement} 用 $replacement 替换 $substring 的第一个匹配
+
+${string//substring/replacement} 用 $replacement 替换 $substring 的所有匹配
+
+#+BEGIN_SRC sh
+  stringZ=abcABC123ABCabc
+
+  echo ${stringZ/abc/xyz}       # xyzABC123ABCabc
+                                # Replaces first match of 'abc' with 'xyz'.
+
+  echo ${stringZ//abc/xyz}      # xyzABC123ABCxyz
+                                # Replaces all matches of 'abc' with # 'xyz'.
+
+  echo  ---------------
+  echo "$stringZ"               # abcABC123ABCabc
+  echo  ---------------
+                                # The string itself is not altered!
+
+  # Can the match and replacement strings be parameterized?
+  match=abc
+  repl=000
+  echo ${stringZ/$match/$repl}  # 000ABC123ABCabc
+  #              ^      ^         ^^^
+  echo ${stringZ//$match/$repl} # 000ABC123ABC000
+  # Yes!          ^      ^        ^^^         ^^^
+
+  echo
+
+  # What happens if no $replacement string is supplied?
+  echo ${stringZ/abc}           # ABC123ABCabc
+  echo ${stringZ//abc}          # ABC123ABC
+  # A simple deletion takes place.
+#+END_SRC
+
+${string/#substring/replacement}  如果 $substring 匹配到 $string 的左端，用 $replacement 替换 $substring
+
+${string/%substring/replacement}  如果 $substring 匹配到 $string 的右端，用 $replacement 替换 $substring
+
+#+BEGIN_SRC sh
+  stringZ=abcABC123ABCabc
+
+  echo ${stringZ/#abc/XYZ}          # XYZABC123ABCabc
+                                    # Replaces front-end match of 'abc' with 'XYZ'.
+
+  echo ${stringZ/%abc/XYZ}          # abcABC123ABCXYZ
+                                    # Replaces back-end match of 'abc' with 'XYZ'.
+#+END_SRC
+
 *** Manipulating strings using awk
+可以用 awk 来代替 built-in 操作进行字符串操作
+
 *** Further Reference
+
+see 16-9 10-9 10-10 10-11 10-13 A-36 A-41
+
 ** Parameter Substitution
+
+${parameter}
