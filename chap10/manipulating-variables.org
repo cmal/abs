@@ -227,6 +227,7 @@ see 16-9 10-9 10-10 10-11 10-13 A-36 A-41
 
 ** Parameter Substitution
 
+*** Manipulating and/or expanding variables
 ${parameter} 与 $parameter 相同，即 parameter 变量的值，在某些上下文中只能使用 ${parameter}
 #+BEGIN_SRC sh
     your_id=${USER}-on-${HOSTNAME}
@@ -262,3 +263,90 @@ ${parameter=default}, ${parameter:=default} 如果 parameter 没有设置，设�
 #+END_SRC
 
 ${parameter+alt_value}, ${parameter:+alt_value} 如果 parameter 设置了，使用 alt_value，否则使用 null string(空字符串) [[file:alt-or-null.sh][例子]]
+
+${parameter?err_msg}, ${parameter:?err_msg} 如果 parameter 设置了，使用它，否则打印 err_msg, 并 exit(1)
+跟之前的一样，: 代表在 parameter 被 declared 且为 null 时有差别
+
+*** Variable length / Substring removal
+
+${#var} 字符串长度($var中的字符数量). 对数组而言，${#array}是数组第一个元素的长度
+例外： ${#*} 和 ${#@} 给出 positional parameters 的数量
+例外： 对数组而言，${#array[*]} 和 ${#array[@]} 给出数组中元素的数量
+
+${var#Pattern}, ${var##Pattern} 前者从 $var 的开头移除匹配 $Pattern 的最短部分，后者从 $var 的开头移除匹配 $Pattern 的最长部分
+Usage:
+#+BEGIN_SRC sh
+  # Function from "days-between.sh" example.
+  # Strips leading zero(s) from argument passed.
+
+  strip_leading_zero () #  Strip possible leading zero(s)
+  {                     #+ from argument passed.
+    return=${1#0}       #  The "1" refers to "$1" -- passed arg.
+  }                     #  The "0" is what to remove from "$1" -- strips zeros.
+
+  # Manfred Schwarb's more elaborate variation of the above:
+
+  strip_leading_zero2 () # Strip possible leading zero(s), since otherwise
+  {                      # Bash will interpret such numbers as octal values.
+    shopt -s extglob     # Turn on extended globbing.
+    local val=${1##+(0)} # Use local variable, longest matching series of 0's.
+    shopt -u extglob     # Turn off extended globbing.
+    _strip_leading_zero2=${val:-0}
+                         # If input was 0, return 0 instead of "".
+  }
+
+  # Another usage illustration:
+
+  echo `basename $PWD`        # Basename of current working directory.
+  echo "${PWD##*/}"           # Basename of current working directory.
+  echo
+  echo `basename $0`          # Name of script.
+  echo $0                     # Name of script.
+  echo "${0##*/}"             # Name of script.
+  echo
+  filename=test.data
+  echo "${filename##*.}"      # data
+                              # Extension of filename.
+#+END_SRC
+
+${var%Pattern}, ${var%%Pattern} 从 $var 的结尾移除 $Pattern 的最短（最长）匹配
+
+*** Variable expansion / Substring replacement
+
+${var:pos} $var 的从位置 $pos 开始的子字符串
+
+${var:pos:len} $var 的从位置 $pos 开始的最长为 $len 个字符的子字符串
+
+${var/Pattern/Replacement}  $var 中对 $Pattern 的首个匹配，替换为 $Replacement
+                            如果忽略 $Replacement 替换为空字符串
+
+${var//Pattern/Replacement}  全局匹配，$var 中对 $Pattern 的所有匹配，都替换为 $Replacement
+                             如果忽略 $Replacement 替换为空字符串
+
+${var/#Pattern/Replacement} 如果 $var 的开头匹配上了 $Pattern, 则匹配的部分替换为 $Replacement
+
+${var/%Pattern/Replacement} 如果 $var 的结尾匹配上了 $Pattern, 则匹配的部分替换为 $Replacement
+
+${!varprefix*}, ${!varprefix@} 匹配以开头 $varprefix 开头的所有已定义的变量名
+
+#+BEGIN_SRC sh
+  # This is a variation on indirect reference, but with a * or @.
+  # Bash, version 2.04, adds this feature.
+
+  xyz23=whatever
+  xyz24=
+
+  a=${!xyz*}         #  Expands to *names* of declared variables
+  # ^ ^   ^           + beginning with "xyz".
+  echo "a = $a"      #  a = xyz23 xyz24
+  a=${!xyz@}         #  Same as above.
+  echo "a = $a"      #  a = xyz23 xyz24
+
+  echo "---"
+
+  abc23=something_else
+  b=${!abc*}
+  echo "b = $b"      #  b = abc23
+  c=${!b}            #  Now, the more familiar type of indirect reference.
+  echo $c            #  something_else
+#+END_SRC

@@ -1,0 +1,10 @@
+* Loops and Branches
+** 11.1 Loops
+*** for loops
+
+for arg in [list]
+for arg in [list] ; do ... ; done
+
+如果 for 循环不给定 in，则相当于 in $@
+
+** 11.2 Nested Loops
