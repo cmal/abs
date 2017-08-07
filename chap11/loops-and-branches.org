@@ -58,5 +58,57 @@ while loop 用于事先不知道循环次数的情况
 [] 在这里就是 test 语法
 这里的 [] 不是强制的
 
+while 循环的测试可以用函数
+#+BEGIN_SRC sh
+  t=0
+
+  condition ()
+  {
+    ((t++))
+
+    if [ $t -lt 5 ]
+    then
+      return 0  # true
+    else
+      return 1  # false
+    fi
+  }
+
+  while condition
+  #     ^^^^^^^^^
+  #     Function call -- four loop iterations.
+  do
+    echo "Still going: t = $t"
+  done
+
+  # Still going: t = 1
+  # Still going: t = 2
+  # Still going: t = 3
+  # Still going: t = 4
+#+END_SRC
+
+Snippet from "sd.sh" example script:
+#+BEGIN_SRC sh
+  while read value   # Read one data point at a time.
+  do
+      rt=$(echo "scale=$SC; $rt + $value" | bc)
+      (( ct++ ))
+  done
+
+  am=$(echo "scale=$SC; $rt / $ct" | bc)
+
+  echo $am; return $ct   # This function "returns" TWO values!
+  #  Caution: This little trick will not work if $ct > 255!
+  #  To handle a larger number of data points,
+  #+ simply comment out the "return $ct" above.
+#+END_SRC
+
+*** util
+#+BEGIN_EXAMPLE
+  until [ condition-is-true ]
+  do
+   command(s)...
+  done
+#+END_EXAMPLE
 
 ** 11.2 Nested Loops
