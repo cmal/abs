@@ -112,3 +112,6 @@ Snippet from "sd.sh" example script:
 #+END_EXAMPLE
 
 ** 11.2 Nested Loops
+[[file:11-20.sh][nested for look]]
+[[file:../chap27/27-11.sh][nested while loop]]
+[[file:../chap27/27-13.sh][a while loop nested in a until loop]]
