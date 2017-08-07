@@ -7,4 +7,7 @@ for arg in [list] ; do ... ; done
 
 如果 for 循环不给定 in，则相当于 in $@
 
+in 后面可以进行 command substitution  [[file:./11-7.sh][11-7.sh]] [[file:11-8.sh][11-8.sh]]
+
+
 ** 11.2 Nested Loops
