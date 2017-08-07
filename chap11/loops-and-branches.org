@@ -22,5 +22,41 @@ command substitution of function
   done
 #+END_SRC
 
+在某些情况下，可以用花括号代替 do, done
+#+BEGIN_SRC sh
+  for((n=1; n<=10; n++))
+  # No do!
+  {
+    echo -n "* $n *"
+  }
+  # No done!
+
+  # Outputs:
+  # * 1 ** 2 ** 3 ** 4 ** 5 ** 6 ** 7 ** 8 ** 9 ** 10 *
+  # And, echo $? returns 0, so Bash does not register an error.
+
+  echo
+
+  #  But, note that in a classic for-loop:    for n in [list] ...
+  #+ a terminal semicolon is required.
+
+  for n in 1 2 3
+  {  echo -n "$n "; }
+  #               ^
+
+  # Thank you, YongYe, for pointing this out.
+#+END_SRC
+*** while
+#+BEGIN_EXAMPLE
+  while [ condition ]
+  do
+      command(s)...
+  done
+#+END_EXAMPLE
+
+while loop 用于事先不知道循环次数的情况
+[] 在这里就是 test 语法
+这里的 [] 不是强制的
+
 
 ** 11.2 Nested Loops
