@@ -1,3 +1,4 @@
+#!/usr/bin
 # Albert Reiner gives an example of how to use "continue N":
 # ---------------------------------------------------------
 
