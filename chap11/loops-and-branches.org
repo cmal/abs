@@ -9,5 +9,18 @@ for arg in [list] ; do ... ; done
 
 in 后面可以进行 command substitution  [[file:./11-7.sh][11-7.sh]] [[file:11-8.sh][11-8.sh]]
 
+command substitution of function
+#+BEGIN_SRC sh
+  generate_list ()
+  {
+    echo "one two three"
+  }
+
+  for word in $(generate_list)  # Let "word" grab output of function.
+  do
+    echo "$word"
+  done
+#+END_SRC
+
 
 ** 11.2 Nested Loops
