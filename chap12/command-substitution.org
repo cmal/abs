@@ -1,0 +1,40 @@
+* Command Substitution
+
+#+BEGIN_SRC sh
+rm `cat filename`   # "filename" contains a list of files to delete.
+#
+# S. C. points out that "arg list too long" error might result.
+# Better is              xargs rm -- < filename
+# ( -- covers those cases where "filename" begins with a "-" )
+
+textfile_listing=`ls *.txt`
+# Variable contains names of all *.txt files in current working directory.
+echo $textfile_listing
+
+textfile_listing2=$(ls *.txt)   # The alternative form of command substitution.
+echo $textfile_listing2
+# Same result.
+
+# A possible problem with putting a list of files into a single string
+# is that a newline may creep in.
+#
+# A safer way to assign a list of files to a parameter is with an array.
+#      shopt -s nullglob    # If no match, filename expands to nothing.
+#      textfile_listing=( *.txt )
+#
+# Thanks, S.C.
+#+END_SRC
+
+NOTE: command substitution invokes a subshell
+
+CAUTION: Command substitution may result in word splitting.
+#+BEGIN_EXAMPLE
+  COMMAND `echo a b`     # 2 args: a and b
+  COMMAND "`echo a b`"   # 1 arg: "a b"
+  COMMAND `echo`         # no arg
+  COMMAND "`echo`"       # one empty arg
+#+END_EXAMPLE
+
+CAUTION: Using echo to output an unquoted variable set with command substitution
+        removes trailing newlines characters from the output of the reassigned
+        command(s). This can cause unpleasant surprises.
