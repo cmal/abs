@@ -119,3 +119,18 @@ Snippet from "sd.sh" example script:
 ** 11.3 Loop Control
 
 break, continue
+** 11.4 Testing and Branching
+*** Controlling program flow in a code block
+
+case (in) / esac
+
+#+BEGIN_EXAMPLE
+  case "$variable" in
+   "$condition1" )
+   command...
+   ;;
+   "$condition2" )
+   command...
+   ;;
+  esac
+#+END_EXAMPLE
