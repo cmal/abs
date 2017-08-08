@@ -38,3 +38,7 @@ CAUTION: Command substitution may result in word splitting.
 CAUTION: Using echo to output an unquoted variable set with command substitution
         removes trailing newlines characters from the output of the reassigned
         command(s). This can cause unpleasant surprises.
+
+
+$(...) 形式取代了 ``(backtip)的形式。
+它们对于处理双反斜线的方式不同，$(...)还允许嵌套
