@@ -134,3 +134,12 @@ case (in) / esac
    ;;
   esac
 #+END_EXAMPLE
+
+select
+#+BEGIN_EXAMPLE
+  select variable [in list]
+  do
+   command...
+   break
+  done
+#+END_EXAMPLE
