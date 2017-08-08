@@ -1,43 +1,50 @@
 * arithmetic expansion
-** variations
+
+** with backticks
 
 #+BEGIN_EXAMPLE
-z=0
-# arithmetic expansion with backticks
-z=`expr $z + 3`          # The 'expr' command performs the expansion.
-# arithmetic expansion with double parentheses
-z=$(($z+3))
-z=$((z+3))                                  #  Also correct.
-                                            #  Within double parentheses,
-                                            #+ parameter dereferencing
-                                            #+ is optional.
+  z=0
+  # arithmetic expansion with backticks
+  z=`expr $z + 3`          # The 'expr' command performs the expansion.
+#+END_EXAMPLE
 
-# $((EXPRESSION)) is arithmetic expansion.  #  Not to be confused with
-                                            #+ command substitution.
+** with double parentheses, and using let
 
-# You may also use operations within double parentheses without assignment.
+#+BEGIN_EXAMPLE
+  z=0
+  # arithmetic expansion with double parentheses
+  z=$(($z+3))
+  z=$((z+3))                                  #  Also correct.
+                                              #  Within double parentheses,
+                                              ,#+ parameter dereferencing
+                                              ,#+ is optional.
 
-  n=0
-  echo "n = $n"                             # n = 0
+  # $((EXPRESSION)) is arithmetic expansion.  #  Not to be confused with
+                                              ,#+ command substitution.
 
-  (( n += 1 ))                              # Increment.
-# (( $n += 1 )) is incorrect!
-  echo "n = $n"                             # n = 1
+  # You may also use operations within double parentheses without assignment.
 
-# arithmetic expansion using let
+    n=0
+    echo "n = $n"                             # n = 0
 
-let z=z+3
-echo $z       # 3
+    (( n += 1 ))                              # Increment.
+  # (( $n += 1 )) is incorrect!
+    echo "n = $n"                             # n = 1
 
-let "z += 3"  #  Quotes permit the use of spaces in variable assignment.
-              #  The 'let' operator actually performs arithmetic evaluation,
-              #+ rather than expansion.
+  # arithmetic expansion using let
 
-echo $z       # 6
+  let z=z+3
+  echo $z       # 3
 
-z+=3
-echo $z       # 63
+  let "z += 3"  #  Quotes permit the use of spaces in variable assignment.
+                #  The 'let' operator actually performs arithmetic evaluation,
+                ,#+ rather than expansion.
 
-(( z += 1 ))
-echo $z       # 64
+  echo $z       # 6
+
+  z+=3
+  echo $z       # 63
+
+  (( z += 1 ))
+  echo $z       # 64
 #+END_EXAMPLE
