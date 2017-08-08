@@ -11,7 +11,7 @@
 
 while true
 do
-  for n in .iso.*
+  for n in .iso.*  # 匹配文件名
   do
     [ "$n" = ".iso.opts" ] && continue
     beta=${n#.iso.}
