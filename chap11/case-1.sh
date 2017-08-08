@@ -7,11 +7,11 @@ case "$1" in
 # Note that ${0##*/} is ${var##pattern} param substitution.
                       # Net result is $0.
 
-  -*) FILENAME=./$1; echo $FILENAME;;   #  If filename passed as argument ($1)
+  -*) FILENAME=./$1;;   #  If filename passed as argument ($1)
                       #+ starts with a dash,
                       #+ replace it with ./$1
                       #+ so further commands don't interpret it
                       #+ as an option.
 
-  * ) FILENAME=$1; echo $FILENAME;;     # Otherwise, $1.
+  * ) FILENAME=$1;;     # Otherwise, $1.
 esac
