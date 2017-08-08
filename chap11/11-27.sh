@@ -7,6 +7,7 @@ case $( arch ) in   # $( arch ) returns machine architecture.
   i486 ) echo "80486-based machine";;
   i586 ) echo "Pentium-based machine";;
   i686 ) echo "Pentium2+-based machine";;
+  x86_64 ) echo "x86_64-based machine";;
   *    ) echo "Other type of machine";;
 esac
 
