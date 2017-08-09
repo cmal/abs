@@ -1,1 +1,11 @@
 * Internal Commands and Builtins
+
+#+BEGIN_SRC sh
+  #!/bin/bash
+  echo "This line uses the \"echo\" builtin."
+  /bin/echo "This line uses the /bin/echo system command."
+#+END_SRC
+
+** I/O
+
+*** echo
